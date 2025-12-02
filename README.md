@@ -163,7 +163,7 @@ All data used in this analysis are publicly available or have been aggregated an
 
 ## Ethics Statement
 
-All data used in this study were aggregate-level and publicly available. Ethics approval for use of individual-level COVID-19 surveillance data to derive testing-adjusted case counts was previously obtained (University of Toronto Research Ethics Board, Protocol #41690), and aggregated case counts have been made publicly available.
+All data used in this study were aggregate-level and publicly available.
 
 ## Authors
 
@@ -186,7 +186,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-We acknowledge the Ontario Ministry of Health, Statistics Canada, and the Public Health Agency of Canada for providing the data that made this analysis possible. We thank the Ontario COVID-19 Science Advisory Table for development of testing-adjusted case count methodology.
+We acknowledge the Ontario Ministry of Health, Statistics Canada, and the Public Health Agency of Canada for providing the data that made this analysis possible.
 
 ## Version History
 
