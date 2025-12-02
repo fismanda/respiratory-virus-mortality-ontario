@@ -1,0 +1,19 @@
+pandemic,virus,fft,sars,flua,flub,rsv,par,lcl,ucl,lnpar,selnpar,fft_label,pandemic_label,label,subgroup,_LCI,_UCI,_WT
+0,All Respiratory Viruses,0,1,1,1,1,.048727,.043367,.054057,-3.02152,.05296,no,no,all | FFT: no | Pandemic: no,Fast Fourer Transform: No | Pandemic: No,.0433672,.0540568,0
+0,Influenza A,0,0,1,0,0,.028892,.024864,.032903,-3.5442,.066327,no,no,flua | FFT: no | Pandemic: no,Fast Fourer Transform: No | Pandemic: No,.0248641,.0329028,0
+0,Influenza B,0,0,0,1,0,.002131,-.000692,.004946,-6.15116,.429543,no,no,flub | FFT: no | Pandemic: no,Fast Fourer Transform: No | Pandemic: No,-.0006916,.0049456,0
+0,Respiratory Syncitial Virus,0,0,0,0,1,.01865,.013308,.023962,-3.98193,.127889,no,no,rsv | FFT: no | Pandemic: no,Fast Fourer Transform: No | Pandemic: No,.0133078,.0239623,0
+0,All Respiratory Viruses,1,1,1,1,1,.015305,.004546,.025948,-4.17957,.269339,yes,no,all | FFT: yes | Pandemic: no,Fast Fourer Transform: Yes | Pandemic: No,.004546,.0259479,0
+0,Influenza A,1,0,1,0,0,.018211,.013891,.022512,-4.00573,.108176,yes,no,flua | FFT: yes | Pandemic: no,Fast Fourer Transform: Yes | Pandemic: No,.013891,.0225121,0
+0,Influenza B,1,0,0,1,0,.001533,-.001355,.004411,-6.48082,.539411,yes,no,flub | FFT: yes | Pandemic: no,Fast Fourer Transform: Yes | Pandemic: No,-.0013546,.0044114,0
+0,Respiratory Syncitial Virus,1,0,0,0,1,-.004529,-.012104,.00299,,,yes,no,rsv | FFT: yes | Pandemic: no,Fast Fourer Transform: Yes | Pandemic: No,-.0121041,.0029896,0
+1,All Respiratory Viruses,0,1,1,1,1,.105913,.080218,.13089,-2.24514,.108031,no,yes,all | FFT: no | Pandemic: yes,Fast Fourer Transform: No | Pandemic: Yes,.0802179,.1308902,0
+1,Influenza A,0,0,1,0,0,.007453,-.001063,.015896,-4.89915,.386466,no,yes,flua | FFT: no | Pandemic: yes,Fast Fourer Transform: No | Pandemic: Yes,-.0010628,.0158963,0
+1,Influenza B,0,0,0,1,0,.003563,-.00464,.011699,-5.63708,.606554,no,yes,flub | FFT: no | Pandemic: yes,Fast Fourer Transform: No | Pandemic: Yes,-.0046397,.0116992,0
+1,Respiratory Syncitial Virus,0,0,0,0,1,.017697,.007194,.028089,-4.03434,.235701,no,yes,rsv | FFT: no | Pandemic: yes,Fast Fourer Transform: No | Pandemic: Yes,.0071943,.0280892,48.85436
+1,SARS-CoV-2,0,1,0,0,0,.080304,.057333,.102716,-2.52193,.125583,no,yes,sars | FFT: no | Pandemic: yes,Fast Fourer Transform: No | Pandemic: Yes,.057333,.102716,0
+1,All Respiratory Viruses,1,1,1,1,1,.076123,.051449,.100154,-2.57541,.139983,yes,yes,all | FFT: yes | Pandemic: yes,Fast Fourer Transform: Yes | Pandemic: Yes,.0514492,.1001544,0
+1,Influenza A,1,0,1,0,0,.004347,-.002613,.011259,-5.43822,.485536,yes,yes,flua | FFT: yes | Pandemic: yes,Fast Fourer Transform: Yes | Pandemic: Yes,-.0026131,.0112592,0
+1,Influenza B,1,0,0,1,0,.000237,-.007162,.007581,-8.34884,1.76874,yes,yes,flub | FFT: yes | Pandemic: yes,Fast Fourer Transform: Yes | Pandemic: Yes,-.007162,.007581,0
+1,Respiratory Syncitial Virus,1,0,0,0,1,.007849,-.002415,.018007,-4.84743,.423683,yes,yes,rsv | FFT: yes | Pandemic: yes,Fast Fourer Transform: Yes | Pandemic: Yes,-.0024147,.0180068,51.14564
+1,SARS-CoV-2,1,1,0,0,0,.064765,.04482,.084294,-2.73699,.134462,yes,yes,sars | FFT: yes | Pandemic: yes,Fast Fourer Transform: Yes | Pandemic: Yes,.0448196,.0842943,0
