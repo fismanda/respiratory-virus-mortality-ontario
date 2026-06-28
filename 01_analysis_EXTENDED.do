@@ -30,7 +30,7 @@ set more off
 ********************************************************************************
 
 * Load monthly aggregated data
-import delimited "/Users/davidfisman_new_mac/Dropbox/Family Room/Attributable Mortality/Updated/ontario_mortality_virology_EXTENDED_1991_2025_CORRECTED.csv", clear
+import delimited "data/ontario_mortality_virology_EXTENDED_1991_2025_CORRECTED.csv", clear
 
 * Destring dates
 gen date2 = date(date, "20YMD")
@@ -817,3 +817,77 @@ export delimited "data/figure2_data.csv", replace
 display "Figure 2 data saved to data/figure2_data.dta and data/figure2_data.csv"
 display "Variables: flua_attr_fft, rsv_attr_fft, rsv_attr_nofft, sars_attr_fft, combined_attr_fft"
 display "All rates are deaths per 100,000 per month"
+
+********************************************************************************
+* SUPPLEMENTARY ANALYSES ADDED AT REVISION (R1 comments 4 and 3)
+* Appended to 01_analysis_EXTENDED.do
+* Requires: data already loaded, with variables -prepandemic-, -pandemic-,
+*           -deaths-, -population-, -series_month-, Fourier terms -sinmo cosmo-,
+*           and viral positivity -monthly_flua_pct_pos- etc., as used above.
+********************************************************************************
+
+
+********************************************************************************
+* (A) WHOLE-SERIES BASELINE-SHIFT MODEL  [Reviewer 1, comment 4]
+*     Single negative binomial model over the FULL 1993-2025 series with a
+*     binary pandemic-period indicator. Used ONLY to characterise the overall
+*     shift in baseline all-cause mortality in the pandemic era; NOT used for
+*     virus attribution (which uses the period-restricted models above).
+********************************************************************************
+
+* Trend centred on the whole-series midpoint (month 205.5)
+capture drop center_month mosq_ws
+gen center_month = series_month - 205.5
+gen mosq_ws      = center_month^2
+
+* sinmo, cosmo  = Fourier seasonal terms
+* center_month  = linear secular trend (whole series)
+* mosq_ws       = quadratic secular trend
+* pandemic      = 1 from March 2020 onward, else 0
+nbreg deaths sinmo cosmo center_month mosq_ws pandemic, ///
+    exposure(population) irr
+* Result (extended series to Feb 2025):
+*   pandemic IRR = 1.052 (95% CI 1.027-1.078), P < 0.001
+
+
+********************************************************************************
+* (B) PRE-PANDEMIC SENSITIVITY ANALYSIS: PRE- vs POST-2009 H1N1  [Reviewer 1, comment 3]
+*     Splits the pre-pandemic period around the 2009 H1N1 pandemic to assess
+*     whether evolving influenza/RSV testing practices materially affected the
+*     pre-pandemic influenza A (and RSV) attributable-fraction benchmark.
+*     The H1N1 pandemic gap (Apr 2009-Aug 2010) is excluded from both strata,
+*     consistent with the main analysis.
+********************************************************************************
+
+capture drop era2009
+gen era2009 = .
+replace era2009 = 0 if prepandemic==1 & date <  date("April 1, 2009","MDY")   // pre-2009
+replace era2009 = 1 if prepandemic==1 & date >  date("August 31, 2010","MDY") // post-2009
+* (H1N1 gap months remain missing -> excluded from both strata)
+
+*--- Pre-2009 era ---
+nbreg deaths sinmo cosmo linear_pre mosq_pre ///
+    monthly_flua_pct_pos monthly_flub_pct_pos monthly_rsv_pct_pos ///
+    if era2009==0, exposure(population) irr
+display _newline "Pre-2009 influenza A PAF:"
+punaf if era2009==0, atspec(monthly_flua_pct_pos=0) eform
+display _newline "Pre-2009 RSV PAF:"
+punaf if era2009==0, atspec(monthly_rsv_pct_pos=0) eform
+
+*--- Post-2009 era ---
+nbreg deaths sinmo cosmo linear_pre mosq_pre ///
+    monthly_flua_pct_pos monthly_flub_pct_pos monthly_rsv_pct_pos ///
+    if era2009==1, exposure(population) irr
+display _newline "Post-2009 influenza A PAF:"
+punaf if era2009==1, atspec(monthly_flua_pct_pos=0) eform
+display _newline "Post-2009 RSV PAF:"
+punaf if era2009==1, atspec(monthly_rsv_pct_pos=0) eform
+
+* NOTE: linear_pre / mosq_pre are centred on the full pre-pandemic midpoint
+* (month 168). If nbreg reports collinearity/convergence issues in either
+* sub-window, re-centre the trend within each stratum, e.g.:
+*     gen c09 = series_month - <sub-window midpoint> if era2009==<0/1>
+*     gen c09sq = c09^2
+* and substitute c09 c09sq for linear_pre mosq_pre. PAF estimates are
+* invariant to centring; this is numerical hygiene only.
+********************************************************************************

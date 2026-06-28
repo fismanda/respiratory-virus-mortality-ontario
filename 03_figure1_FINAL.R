@@ -18,7 +18,16 @@ library(scales)
 dat <- read.csv("data/ontario_mortality_virology_EXTENDED_1991_2025_CORRECTED.csv",
                 stringsAsFactors = FALSE)
 dat$date <- as.Date(dat$date)
-
+# Ensure rows exist for the H1N1 gap months so the line breaks (not just shaded)
+gap_months <- seq(as.Date("2009-11-01"), as.Date("2010-08-31"), by = "month")
+missing <- gap_months[!gap_months %in% dat$date]
+if (length(missing) > 0) {
+  add <- dat[1:length(missing), ]
+  add[,] <- NA
+  add$date <- missing
+  dat <- rbind(dat, add)
+  dat <- dat[order(dat$date), ]
+}
 # H1N1 exclusion period
 h1n1_start <- as.Date("2009-11-01")
 h1n1_end   <- as.Date("2010-08-31")
@@ -72,7 +81,7 @@ p1 <- ggplot() +
   geom_vline(xintercept = pandemic_start, linetype = "dashed", linewidth = 0.6) +
   scale_color_manual(values = c("Statistics Canada"       = "#44AAAA",
                                 "Ontario Deaths Registry" = "#E05555")) +
-  scale_x_date(date_breaks = "5 years", date_labels = "%Y") +
+  scale_x_date(date_breaks = "3 years", date_labels = "%Y") +
   labs(y = "Deaths per 100,000", x = "Date", color = NULL) +
   theme_minimal(base_size = 11) +
   theme(legend.position = "bottom",
@@ -84,7 +93,6 @@ p1 <- ggplot() +
 ################################################################################
 
 df_flu <- dat %>%
-  filter(!is.na(monthly_flua_pct_pos) | !is.na(monthly_flub_pct_pos)) %>%
   select(date, monthly_flua_pct_pos, monthly_flub_pct_pos) %>%
   pivot_longer(cols = c(monthly_flua_pct_pos, monthly_flub_pct_pos),
                names_to = "virus", values_to = "positivity") %>%
@@ -104,7 +112,7 @@ p2 <- ggplot(df_flu, aes(x = date, y = positivity, color = virus)) +
   geom_vline(xintercept = pandemic_start, linetype = "dashed", linewidth = 0.6) +
   scale_color_manual(values = c("Influenza A" = "#E05555",
                                 "Influenza B" = "#44AAAA")) +
-  scale_x_date(date_breaks = "5 years", date_labels = "%Y") +
+  scale_x_date(date_breaks = "3 years", date_labels = "%Y") +
   labs(y = "Percent Positive", x = "Date", color = NULL) +
   theme_minimal(base_size = 11) +
   theme(legend.position = "bottom",
@@ -115,7 +123,7 @@ p2 <- ggplot(df_flu, aes(x = date, y = positivity, color = virus)) +
 # PANEL C: RSV (with H1N1 gap)
 ################################################################################
 
-df_rsv <- dat %>% filter(!is.na(monthly_rsv_pct_pos))
+df_rsv <- dat
 
 p3 <- ggplot(df_rsv, aes(x = date, y = monthly_rsv_pct_pos)) +
   geom_rect(data = h1n1_rect,
@@ -125,7 +133,7 @@ p3 <- ggplot(df_rsv, aes(x = date, y = monthly_rsv_pct_pos)) +
            label = "H1N1\ngap", vjust = 1.3, size = 2.5, color = "gray50") +
   geom_line(color = "#E07722", linewidth = 0.7, na.rm = FALSE) +
   geom_vline(xintercept = pandemic_start, linetype = "dashed", linewidth = 0.6) +
-  scale_x_date(date_breaks = "5 years", date_labels = "%Y") +
+  scale_x_date(date_breaks = "3 years", date_labels = "%Y") +
   labs(y = "RSV Percent Positive", x = "Date") +
   theme_minimal(base_size = 11) +
   theme(panel.grid.minor = element_blank(),
@@ -161,7 +169,8 @@ p4 <- ggplot() +
   ) +
   scale_color_manual(values = c("Adjusted Cases per 10,000" = "#E05555",
                                 "SARS-2 Positivity (%)"     = "#44AAAA")) +
-  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y",
+               guide = guide_axis(angle = 45)) +
   labs(x = "Date", color = NULL) +
   theme_minimal(base_size = 11) +
   theme(legend.position = "bottom",
@@ -182,3 +191,6 @@ ggsave("figures/figure1_mortality_virology.png",  figure1, width = 10, height = 
 ggsave("figures/figure1_mortality_virology.tiff", figure1, width = 10, height = 8, dpi = 300)
 
 cat("Figure 1 saved.\n")
+
+sum(dat$date >= as.Date("2009-11-01") & dat$date <= as.Date("2010-08-31"))
+
